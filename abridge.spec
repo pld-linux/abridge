@@ -8,6 +8,10 @@ Group:		X11/Applications/Games
 Source0:	http://www.abridgegame.org/src/%{name}-%{version}.tar.gz
 # Source0-md5:	f02c5d4f726ca847e9aba39706bb67e9
 URL:		http://www.abridgegame.org/
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	wxGTK2-devel
+BuildRequires:	wxWindows-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
