@@ -2,7 +2,7 @@ Summary:	Online bridge game
 Summary(pl):	Gra w bryd¿a online
 Name:		abridge
 Version:	0.4.0
-Release:	0.1
+Release:	1
 License:	GPL v2
 Group:		X11/Applications/Games
 Source0:	http://www.abridgegame.org/src/%{name}-%{version}.tar.gz
