@@ -1,5 +1,5 @@
-Summary:	-
-Summary(pl):	-
+Summary:	Online bridge game	
+Summary(pl):	Gra w bryd¿a online
 Name:		abridge
 Version:	0.4.0
 Release:	0.1
@@ -11,8 +11,14 @@ URL:		http://www.abridgegame.org/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
+aBridge is a bridge game that allows you to play bridge online
+with other real people.  It uses the IRC protocol for chat, so you
+can use it to play bridge on any IRC server.
 
 %description -l pl
+aBridge jest programem pozwalaj±cem na grê w bryd¿a z innymi lud¼mi
+online. U¿ywa protoko³u IRC do rozmów, wiêc mo¿esz u¿yæ go do gry w
+bryd¿a na dowolnym serwerze IRC.
 
 %prep
 %setup -q
@@ -42,4 +48,3 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS ChangeLog NEWS README TODO
 %attr(755,root,root) %{_bindir}/*
 %{_mandir}/man1/%{name}.1*
-#%{_datadir}/%{name}
