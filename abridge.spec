@@ -21,7 +21,7 @@ can use it to play bridge on any IRC server.
 
 %description -l pl
 aBridge jest programem pozwalaj±cem na grê w bryd¿a z innymi lud¼mi
-online. U¿ywa protoko³u IRC do rozmów, wiêc mo¿esz u¿yæ go do gry w
+online. U¿ywa protoko³u IRC do rozmów, wiêc mo¿na u¿yæ go do gry w
 bryd¿a na dowolnym serwerze IRC.
 
 %prep
@@ -38,8 +38,6 @@ bryd¿a na dowolnym serwerze IRC.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-# create directories if necessary
-#install -d $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
