@@ -20,7 +20,7 @@ with other real people.  It uses the IRC protocol for chat, so you
 can use it to play bridge on any IRC server.
 
 %description -l pl
-aBridge jest programem pozwalaj±cem na grê w bryd¿a z innymi lud¼mi
+aBridge jest programem pozwalaj±cym na grê w bryd¿a z innymi lud¼mi
 online. U¿ywa protoko³u IRC do rozmów, wiêc mo¿na u¿yæ go do gry w
 bryd¿a na dowolnym serwerze IRC.
 
