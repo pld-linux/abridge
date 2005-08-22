@@ -11,7 +11,7 @@ URL:		http://www.abridgegame.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	wxGTK2-devel
-BuildRequires:	wxWidgets-devel
+BuildRequires:	wxWindows-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -33,7 +33,7 @@ bryd¿a na dowolnym serwerze IRC.
 %{__autoheader}
 %{__automake}
 %configure \
-	--with-wx-config=/usr/bin/wx-gtk2-ansi-config
+	--with-wx-config=/usr/bin/wxgtk2-2.4-config
 %{__make}
 
 %install
