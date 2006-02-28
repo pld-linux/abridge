@@ -1,4 +1,4 @@
-Summary:	Online bridge game	
+Summary:	Online bridge game
 Summary(pl):	Gra w bryd¿a online
 Name:		abridge
 Version:	0.4.0
