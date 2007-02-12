@@ -1,5 +1,5 @@
 Summary:	Online bridge game
-Summary(pl):	Gra w bryd¿a online
+Summary(pl.UTF-8):   Gra w brydÅ¼a online
 Name:		abridge
 Version:	0.4.0
 Release:	2
@@ -19,10 +19,10 @@ aBridge is a bridge game that allows you to play bridge online
 with other real people.  It uses the IRC protocol for chat, so you
 can use it to play bridge on any IRC server.
 
-%description -l pl
-aBridge jest programem pozwalaj±cym na grê w bryd¿a z innymi lud¼mi
-online. U¿ywa protoko³u IRC do rozmów, wiêc mo¿na u¿yæ go do gry w
-bryd¿a na dowolnym serwerze IRC.
+%description -l pl.UTF-8
+aBridge jest programem pozwalajÄ…cym na grÄ™ w brydÅ¼a z innymi ludÅºmi
+online. UÅ¼ywa protokoÅ‚u IRC do rozmÃ³w, wiÄ™c moÅ¼na uÅ¼yÄ‡ go do gry w
+brydÅ¼a na dowolnym serwerze IRC.
 
 %prep
 %setup -q
