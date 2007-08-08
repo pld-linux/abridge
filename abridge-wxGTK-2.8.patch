@@ -1,0 +1,199 @@
+diff -ur abridge-0.4.0/src/floatwindow.cpp abridge-0.4.0-patched/src/floatwindow.cpp
+--- abridge-0.4.0/src/floatwindow.cpp	2003-03-03 15:30:21.000000000 -0500
++++ abridge-0.4.0-patched/src/floatwindow.cpp	2006-01-31 00:38:51.909199250 -0500
+@@ -57,7 +57,7 @@
+ FloatWindow::~FloatWindow() {
+ }
+ 
+-void FloatWindow::OnMove(const wxMoveEvent& event) {
++void FloatWindow::OnMove(wxMoveEvent& event) {
+   if (!m_allow_move) {
+     Move(GetParent()->GetPosition() + GetRelativePosition());
+     m_allow_move = true;
+diff -ur abridge-0.4.0/src/floatwindow.h abridge-0.4.0-patched/src/floatwindow.h
+--- abridge-0.4.0/src/floatwindow.h	2003-03-03 15:30:20.000000000 -0500
++++ abridge-0.4.0-patched/src/floatwindow.h	2006-01-31 00:39:05.434044500 -0500
+@@ -43,7 +43,7 @@
+ 
+   virtual ~FloatWindow();
+ 
+-  void OnMove(const wxMoveEvent& event);
++  void OnMove(wxMoveEvent& event);
+   void OnActivate(wxActivateEvent& event);
+   void ParentMoved();
+ 
+@@ -52,8 +52,8 @@
+   void MoveToPosition();
+   void DisallowOneMove();
+ 
+-  virtual wxPoint GetRelativePosition() = NULL;
+-  virtual void SetRelativePosition(wxPoint p) = NULL;
++  virtual wxPoint GetRelativePosition() = 0;
++  virtual void SetRelativePosition(wxPoint p) = 0;
+ 
+   static void InitStaticVariables() {};
+     
+diff -ur abridge-0.4.0/src/ftpfilecache.cpp abridge-0.4.0-patched/src/ftpfilecache.cpp
+--- abridge-0.4.0/src/ftpfilecache.cpp	2003-03-03 15:30:21.000000000 -0500
++++ abridge-0.4.0-patched/src/ftpfilecache.cpp	2006-01-31 00:38:00.974016000 -0500
+@@ -99,13 +99,13 @@
+     return "unknown.png";
+   }
+   wxFileInputStream *in_stream = new wxFileInputStream(filename);
+-  if (!in_stream || (in_stream->LastError() != wxStream_NOERROR)) {
++  if (!in_stream || (in_stream->GetLastError() != wxSTREAM_NO_ERROR)) {
+     DebugMsg("error opening file '" + filename + "' for reading");
+     return "unknown.png";
+   } else {
+     DebugMsg("Successfully opened file '" + filename + "' for reading");
+   }
+-  long the_size=in_stream->StreamSize();
++  long the_size=in_stream->GetSize();
+   if (the_size == 0) {
+     DebugMsg("Aaack the file is empty");
+     return "unknown.png";
+@@ -177,13 +177,13 @@
+     return NULL;
+   }
+   in_stream = ftp.GetInputStream(m_remotefilename);
+-  if (!in_stream || in_stream->LastError() != wxStream_NOERROR) {
++  if (!in_stream || in_stream->GetLastError() != wxSTREAM_NO_ERROR) {
+     DebugMsg("Problem finding file" + m_remotefilename);
+     return NULL;
+   }
+   DebugMsg("Reading file " + m_remotefilename);
+   wxFileOutputStream *out_stream = new wxFileOutputStream(m_localfilename);
+-  if (!out_stream || out_stream->LastError() != wxStream_NOERROR) {
++  if (!out_stream || out_stream->GetLastError() != wxSTREAM_NO_ERROR) {
+     DebugMsg("error opening file '" + m_localfilename + "' for output");
+     return NULL;
+   }
+@@ -224,7 +224,7 @@
+   wxFTP ftp;
+   wxOutputStream *out_stream;
+   wxFileInputStream *in_stream = new wxFileInputStream(m_localfilename);
+-  if (!in_stream || in_stream->LastError() != wxStream_NOERROR) {
++  if (!in_stream || in_stream->GetLastError() != wxSTREAM_NO_ERROR) {
+     DebugMsg("error opening file " + m_localfilename + "for reading");
+     return NULL;
+   }
+@@ -236,7 +236,7 @@
+     return NULL;
+   }
+   out_stream = ftp.GetOutputStream(m_remotefilename);
+-  if (!out_stream || out_stream->LastError() != wxStream_NOERROR) {
++  if (!out_stream || out_stream->GetLastError() != wxSTREAM_NO_ERROR) {
+     DebugMsg("Problem creating remote file " + m_remotefilename);
+     DebugMsg("Perhaps " + m_remotefilename + " is already on server?");
+     return NULL;
+diff -ur abridge-0.4.0/src/playerprefs.cpp abridge-0.4.0-patched/src/playerprefs.cpp
+--- abridge-0.4.0/src/playerprefs.cpp	2003-03-03 15:30:21.000000000 -0500
++++ abridge-0.4.0-patched/src/playerprefs.cpp	2006-01-31 00:29:19.017395750 -0500
+@@ -207,7 +207,7 @@
+       if (my_image.LoadFile(hello)) {
+         DebugMsg("Found image file " + hello);
+         my_image.Rescale(64,64);
+-        m_playerpic_bitmap->SetBitmap(my_image.ConvertToBitmap());
++        m_playerpic_bitmap->SetBitmap(wxBitmap(my_image));
+       }
+     }
+   }
+diff -ur abridge-0.4.0/src/prefmacros.cpp abridge-0.4.0-patched/src/prefmacros.cpp
+--- abridge-0.4.0/src/prefmacros.cpp	2003-03-03 15:30:21.000000000 -0500
++++ abridge-0.4.0-patched/src/prefmacros.cpp	2006-01-31 00:30:08.456485500 -0500
+@@ -52,7 +52,7 @@
+       if (my_image.LoadFile(filename)) {
+         DebugMsg("Found image file " + filename);
+         my_image.Rescale(64,64);
+-        return my_image.ConvertToBitmap();
++        return wxBitmap(my_image);
+       } else {
+         DebugMsg("Deleting bad image file");
+         wxRemoveFile(filename);
+diff -ur abridge-0.4.0/src/suit.cpp abridge-0.4.0-patched/src/suit.cpp
+--- abridge-0.4.0/src/suit.cpp	2003-03-21 09:35:11.000000000 -0500
++++ abridge-0.4.0-patched/src/suit.cpp	2006-01-31 00:53:05.182525500 -0500
+@@ -65,10 +65,10 @@
+   temp_dc.SelectObject(weemap);
+   if (usd) temp_dc.Blit(0,0,w,2*h, &dc, x, y-h);
+   else temp_dc.Blit(0,0,w,2*h, &dc, x, y);
+-  wxImage myim(weemap);
++  wxImage myim(weemap.ConvertToImage());
+   myim.Rescale(4*w, 4*2*h);
+   if (usd) myim = myim.Rotate90().Rotate90();
+-  wxBitmap bigmap = myim.ConvertToBitmap();
++  wxBitmap bigmap(myim);
+   temp_dc.SelectObject(bigmap);
+   if (is_red) temp_dc.SetTextForeground( *wxRED );
+   else temp_dc.SetTextForeground( *wxBLACK );
+@@ -82,10 +82,10 @@
+   wxFont *f = wxTheFontList->FindOrCreateFont(--i, wxSWISS, wxNORMAL, wxNORMAL);
+   temp_dc.SetFont(*f);
+   temp_dc.DrawText(num, 0, -lead);
+-  wxImage tm_im(bigmap);
++  wxImage tm_im(bigmap.ConvertToImage());
+   if (usd) tm_im = tm_im.Rotate90().Rotate90();
+ 
+-  wxBitmap aabm = anti_alias(tm_im).ConvertToBitmap();
++  wxBitmap aabm(anti_alias(tm_im));
+   wxMemoryDC aadc;
+   aadc.SelectObject(aabm);
+   if (usd) dc.Blit(x,y-h, w, 2*h, &aadc, 0, 0, wxAND);
+@@ -98,15 +98,15 @@
+   wxMemoryDC temp_dc;
+   temp_dc.SelectObject(weemap);
+   temp_dc.Blit(0,0,w,h, &dc, x, y);
+-  wxImage myim(weemap);
++  wxImage myim(weemap.ConvertToImage());
+   myim.Rescale(4*w, 4*h);
+-  wxBitmap bigmap = myim.ConvertToBitmap();
++  wxBitmap bigmap(myim);
+   temp_dc.SelectObject(bigmap);
+   DrawSuitOnBM(temp_dc, m_suit, 4*w, 4*h);
+-  wxImage tm_im(bigmap);
++  wxImage tm_im(bigmap.ConvertToImage());
+   if (usd) tm_im.Mirror(false);
+ 
+-  wxBitmap aabm = anti_alias(tm_im).ConvertToBitmap();
++  wxBitmap aabm(anti_alias(tm_im));
+   wxMemoryDC aadc;
+   aadc.SelectObject(aabm);
+   dc.Blit(x,y, w, h, &aadc, 0, 0, wxCOPY);
+diff -ur abridge-0.4.0/src/table.cpp abridge-0.4.0-patched/src/table.cpp
+--- abridge-0.4.0/src/table.cpp	2003-03-21 09:35:11.000000000 -0500
++++ abridge-0.4.0-patched/src/table.cpp	2006-01-31 00:45:34.742374750 -0500
+@@ -52,12 +52,12 @@
+ // include config.h for VERSION
+ #include "config.h"
+ 
++  // EVT_MENU(wxID_CLOSE, aBridgeTable::OnCloseWindow)
+ BEGIN_EVENT_TABLE(aBridgeTable, wxFrame)
+   EVT_MENU(CLAIM, aBridgeTable::Claim)
+   EVT_MENU(SHOWBID, aBridgeTable::ShowBids)
+   EVT_MENU(SHOWSCORES, aBridgeTable::ShowScores)
+   EVT_MENU(SHOWLAST, aBridgeTable::ShowLastTrick)
+-  EVT_MENU(wxID_CLOSE, aBridgeTable::OnCloseWindow)
+   EVT_MOVE(aBridgeTable::OnMove)
+   EVT_CLOSE(aBridgeTable::OnCloseWindow)
+   EVT_TEXT_ENTER(TALK, aBridgeTable::Talk)
+@@ -335,7 +335,7 @@
+   }
+ }
+ 
+-void aBridgeTable::OnMove(const wxMoveEvent& event) {
++void aBridgeTable::OnMove(wxMoveEvent& event) {
+   if (m_lasttrick) m_lasttrick->ParentMoved();
+   if (m_game) m_game->TableMoved();
+   if (m_scorewin) m_scorewin->ParentMoved();
+diff -ur abridge-0.4.0/src/table.h abridge-0.4.0-patched/src/table.h
+--- abridge-0.4.0/src/table.h	2003-03-03 15:30:21.000000000 -0500
++++ abridge-0.4.0-patched/src/table.h	2006-01-31 00:24:01.097527000 -0500
+@@ -54,7 +54,7 @@
+   virtual ~aBridgeTable();
+   
+   void OnCloseWindow(wxCloseEvent& event);
+-  void OnMove(const wxMoveEvent& event);
++  void OnMove(wxMoveEvent& event);
+   
+   // Menu callbacks
+   void ShowBids(wxCommandEvent& event);

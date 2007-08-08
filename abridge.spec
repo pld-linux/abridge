@@ -7,11 +7,13 @@ License:	GPL v2
 Group:		X11/Applications/Games
 Source0:	http://www.abridgegame.org/src/%{name}-%{version}.tar.gz
 # Source0-md5:	f02c5d4f726ca847e9aba39706bb67e9
+#Patch0 based on: http://www.kunxi.org/files/abridge-0.4.0-wxGTK-2.6.1.diff
+Patch0:		abridge-wxGTK-2.8.patch
 URL:		http://www.abridgegame.org/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	wxGTK2-devel
-BuildRequires:	wxWindows-devel
+BuildRequires:	wxWidgets-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -26,6 +28,7 @@ brydża na dowolnym serwerze IRC.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %{__aclocal}
@@ -33,7 +36,7 @@ brydża na dowolnym serwerze IRC.
 %{__autoheader}
 %{__automake}
 %configure \
-	--with-wx-config=/usr/bin/wxgtk2-2.4-config
+	--with-wx-config=/usr/bin/wx-gtk2-ansi-config
 %{__make}
 
 %install
